@@ -35,8 +35,13 @@ import java.io.IOException;
  * 残留问题:
  *     未进行数据格式化
  *
+ * <pre><code>
  * 运行:
- *   hadoop jar com.zw.mr.weekone.PriceStatistics /w1/m/input /w1/pr/output
+ *   hadoop jar mr-demo-1.0-SNAPSHOT.jar \
+ *   com.zw.mr.w1.PriceStatistics \
+ *   /hw/hdfs//w1/products \
+ *   /hw/hdfs/mr/w1/output/ps
+ * </code></pre>
  *
  * Created by zhangws on 16/8/4.
  */
@@ -55,7 +60,7 @@ public class PriceStatistics {
             // key: 品种; value: 价格
             if (strings.length == 6 &&  strings[4].equals("山西")) {
                 context.write(new Text(strings[0]
-                        + fileName.substring(fileName.length() - 5, fileName.length() - 4)),
+                        + "\t" + fileName.substring(fileName.length() - 14, fileName.length() - 4)),
                         new FloatWritable(Float.valueOf(strings[1])));
             }
         }
@@ -114,7 +119,6 @@ public class PriceStatistics {
         job.setJarByClass(PriceStatistics.class);
 
         job.setMapperClass(PriceMapper.class);
-        //job.setCombinerClass(PriceReducer.class); // 由于参数类型不一致, 而使用默认的combiner
         job.setReducerClass(PriceReducer.class);
 
         job.setMapOutputKeyClass(Text.class);
@@ -131,6 +135,11 @@ public class PriceStatistics {
         }
         FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        if (job.waitForCompletion(true)) {
+            HdfsUtil.cat(conf, otherArgs[1] + "/part-r-00000");
+            System.out.println("success");
+        } else {
+            System.out.println("fail");
+        }
     }
 }

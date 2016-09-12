@@ -27,9 +27,9 @@ import java.util.Set;
  * 例:
  * <pre><code>
  *   hadoop jar mr-demo.jar \
- *   com.zw.mr.w1.MarketStatistics  \
- *   /hw/hdfs/mr/hw/w1/products \
- *   /hw/hdfs/mr/hw/w1/output/ms
+ *   com.zw.mr.w1.KindStatistics \
+ *   /hw/hdfs//w1/products \
+ *   /hw/hdfs/mr/w1/output/ks
  *   </code></pre>
  * </p>
  * <p>

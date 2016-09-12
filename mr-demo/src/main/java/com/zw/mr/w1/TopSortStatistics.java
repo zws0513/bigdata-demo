@@ -1,7 +1,7 @@
 package com.zw.mr.w1;
 
-import com.zw.util.HdfsUtil;
 import com.zw.mr.w1.dto.IntWritableCompare;
+import com.zw.util.HdfsUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -18,8 +18,19 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.IOException;
 
 /**
- * 统计每个省农产品种类总数
- *
+ * 根据农产品数量排序省份
+ * <p>
+ * 利用KindStatistics的输出结果(统计每个省农产品种类总数)
+ * </p>
+ * <pre>
+ * <code>
+ * hadoop jar mr-demo-1.0-SNAPSHOT.jar \
+ * com.zw.mr.w1.TopSortStatistics \
+ * /hw/hdfs/mr/w1/output/ks/part-r-00000 \
+ * /hw/hdfs/mr/w1/output/tss
+ * </code>
+ * </pre>
+ * <p>
  * Created by zhangws on 16/8/4.
  */
 public class TopSortStatistics {
@@ -60,7 +71,6 @@ public class TopSortStatistics {
         job.setJarByClass(TopSortStatistics.class);
 
         job.setMapperClass(SortMapper.class);
-        //job.setCombinerClass(SortReducer.class); // 由于参数类型不一致, 而使用默认的combiner
         job.setReducerClass(SortReducer.class);
 
         job.setMapOutputKeyClass(IntWritableCompare.class);
@@ -72,6 +82,11 @@ public class TopSortStatistics {
         FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
         FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        if (job.waitForCompletion(true)) {
+            HdfsUtil.cat(conf, otherArgs[1] + "/part-r-00000");
+            System.out.println("success");
+        } else {
+            System.out.println("fail");
+        }
     }
 }

@@ -2,6 +2,7 @@ package com.zw.mr.w1;
 
 import com.zw.util.HdfsUtil;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
@@ -16,6 +17,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,44 +25,37 @@ import java.util.Set;
 /**
  * 统计排名前 3 的省份共同拥有的农产品类型
  * <p>
- * <p>
- * <p>
  * 流程:
  * 1. 利用TopSortStatistics输出的结果, 读取前三省名;
  * 2. 读取所有数据, 过滤非前三省的记录;
  * 3. 以品种为key, 省名为value, 结束map;
  * 4. reduce中, value中有三个省的, 输出
  * <p>
- * 残留问题:
- * 未按老师提示使用cleanup
- * <p>
  * 运行:
- * hadoop jar hadoop-demo-1.0-SNAPSHOT.jar com.zw.mr.weekone.TopStatistics /w1/ts/output/part-r-00000 /w1/m/input /w1/t/output
- * </p>
+ * <pre><code>
+ * hadoop jar mr-demo-1.0-SNAPSHOT.jar \
+ * com.zw.mr.w1.TopStatistics \
+ * /hw/hdfs/mr/w1/output/tss/part-r-00000 \
+ * /hw/hdfs//w1/products \
+ * /hw/hdfs/mr/w1/output/ts
+ * </code></pre>
  * <p>
  * Created by zhangws on 16/8/4.
  */
 public class TopStatistics {
     public static class TopMapper extends Mapper<LongWritable, Text, Text, Text> {
 
-        private String top3OfProvince;
+        private String top3OfProvince = "";
 
         @Override
         protected void setup(Context context) throws IOException, InterruptedException {
             BufferedReader br = null;
 
-            //获得当前作业的DistributedCache相关文件
             URI[] paths = context.getCacheFiles();
-//            Path[] distributePaths = DistributedCache.getLocalCacheFiles(context.getConfiguration());
-//            if (distributePaths == null || distributePaths.length == 0) {
-//                return;
-//            }
-            String cityInfo = null;
-//            for (Path p : distributePaths) {
-//                if (p.toString().endsWith("part-r-00000")) {
-            //读缓存文件，并放到mem中
+            String cityInfo;
             try {
-                br = new BufferedReader(new FileReader(paths[0].toString()));
+                FileSystem fileSystem = FileSystem.get(paths[0], context.getConfiguration());
+                br = new BufferedReader(new InputStreamReader(fileSystem.open(new Path(paths[0].toString()))));
                 int lines = 0;
                 while (lines < 3 && null != (cityInfo = br.readLine())) {
                     String[] cityPart = cityInfo.split("\t");
@@ -73,8 +68,6 @@ public class TopStatistics {
                 if (br != null)
                     br.close();
             }
-//                }
-//            }
         }
 
         public void map(LongWritable key, Text value, Context context)
@@ -103,11 +96,6 @@ public class TopStatistics {
             }
         }
 
-        /**
-         * Called once at the end of the task.
-         *
-         * @param context
-         */
         @Override
         protected void cleanup(Context context) throws IOException, InterruptedException {
             super.cleanup(context);
@@ -131,10 +119,8 @@ public class TopStatistics {
         URI[] paths = new URI[1];
         paths[0] = new Path(args[0]).toUri();
         job.setCacheFiles(paths);
-//        DistributedCache.addCacheFile(new Path(args[0]).toUri(), conf);//为该job添加缓存文件
 
         job.setMapperClass(TopMapper.class);
-        //job.setCombinerClass(TopReducer.class); // 由于参数类型不一致, 而使用默认的combiner
         job.setReducerClass(TopReducer.class);
 
         job.setMapOutputKeyClass(Text.class);
@@ -152,7 +138,7 @@ public class TopStatistics {
         FileOutputFormat.setOutputPath(job, new Path(otherArgs[2]));
 
         if (job.waitForCompletion(true)) {
-            HdfsUtil.cat(conf, otherArgs[1] + "/part-r-00000");
+            HdfsUtil.cat(conf, otherArgs[2] + "/part-r-00000");
             System.out.println("success");
         } else {
             System.out.println("fail");
