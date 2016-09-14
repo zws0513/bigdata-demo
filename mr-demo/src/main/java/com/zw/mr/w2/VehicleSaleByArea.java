@@ -26,6 +26,12 @@ import java.io.IOException;
  *     reduce:
  *       1. 合计输出
  * </p>
+ * <pre><code>
+ *   hadoop jar mr-demo.jar \
+ *   com.zw.mr.w2.VehicleSaleByArea \
+ *   /hw/hdfs/w2/cars/autocar.txt \
+ *   /hw/hdfs/mr/w2/output/vsa
+ * </code></pre>
  *
  * Created by zhangws on 16/8/12.
  */

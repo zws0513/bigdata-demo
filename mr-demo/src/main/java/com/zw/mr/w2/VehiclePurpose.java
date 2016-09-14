@@ -25,6 +25,14 @@ import java.io.IOException;
  * Reduce:
  *   1. 统计values的总数, 并输出
  *
+ * <pre><code>
+ *   hadoop jar mr-demo.jar \
+ *   com.zw.mr.w2.VehiclePurpose \
+ *   /hw/hdfs/w2/cars/autocar.txt \
+ *   /hw/hdfs/mr/w2/output/vp
+ * </code></pre>
+ * <p>
+ *
  * Created by zhangws on 16/8/12.
  */
 public class VehiclePurpose {

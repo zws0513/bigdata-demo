@@ -12,6 +12,8 @@
     <module>hbase-demo</module>
     <module>hive-demo</module>
     <module>show-data</module>
+    <module>storm-demo</module>
+    <module>spark-demo</module>
   </modules>
 
 </project>

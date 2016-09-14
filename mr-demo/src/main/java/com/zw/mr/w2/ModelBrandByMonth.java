@@ -26,6 +26,13 @@ import java.io.IOException;
  *       1. 合计输出
  * </p>
  *
+ * <pre><code>
+ *   hadoop jar mr-demo.jar \
+ *   com.zw.mr.w2.ModelBrandByMonth \
+ *   /hw/hdfs/w2/cars/autocar.txt \
+ *   /hw/hdfs/mr/w2/output/mbm
+ * </code></pre>
+ *
  * Created by zhangws on 16/8/12.
  */
 public class ModelBrandByMonth {

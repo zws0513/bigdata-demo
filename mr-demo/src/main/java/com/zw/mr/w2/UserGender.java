@@ -28,6 +28,12 @@ import java.util.Map;
  *   1. 合计
  *   2. cleanup中计算最后的比例
  * </p>
+ * <pre><code>
+ *   hadoop jar mr-demo.jar \
+ *   com.zw.mr.w2.UserGender \
+ *   /hw/hdfs/w2/cars/autocar.txt \
+ *   /hw/hdfs/mr/w2/output/ug
+ * </code></pre>
  * <p/>
  * Created by zhangws on 16/8/12.
  */
