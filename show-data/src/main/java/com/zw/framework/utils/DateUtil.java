@@ -21,9 +21,9 @@ public class DateUtil {
     }
 
     /** 日期格式：yyyy-MM-dd HH:mm:ss */
-    public static final String FORMAT_YYYYMMDD_HHMISS = "yyyy-MM-dd HH:mm:ss";
-    public static final String FORMAT_YYYYMMDD = "yyyy-MM-dd";
-    public static final String FORMAT_HHMMSS = "HH:mm:ss";
+    public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
+    public static final String YYYY_MM_DD = "yyyy-MM-dd";
+    public static final String HH_MM_SS = "HH:mm:ss";
 
     /**
      * 获取现在时间
@@ -31,7 +31,7 @@ public class DateUtil {
      * @return返回短时间格式 yyyy-MM-dd
      */
     public static String ymdDateStr() {
-        SimpleDateFormat formatter = new SimpleDateFormat(FORMAT_YYYYMMDD);
+        SimpleDateFormat formatter = new SimpleDateFormat(YYYY_MM_DD);
         return formatter.format(new Date());
     }
     
@@ -41,7 +41,7 @@ public class DateUtil {
      * @return返回短时间格式 HH:mm:ss
      */
     public static String hmsDateStr() {
-        SimpleDateFormat formatter = new SimpleDateFormat(FORMAT_HHMMSS);
+        SimpleDateFormat formatter = new SimpleDateFormat(HH_MM_SS);
         return formatter.format(new Date());
     }
     
@@ -83,9 +83,9 @@ public class DateUtil {
      */
     public static String getNextDay(String nowdate, String delay) {
         try {
-            SimpleDateFormat format = new SimpleDateFormat(FORMAT_YYYYMMDD);
+            SimpleDateFormat format = new SimpleDateFormat(YYYY_MM_DD);
             String mdate = "";
-            Date d = strToDate(nowdate, FORMAT_YYYYMMDD);
+            Date d = strToDate(nowdate, YYYY_MM_DD);
             long myTime = (d.getTime() / 1000) + Integer.parseInt(delay) * 24 * 60 * 60;
             d.setTime(myTime * 1000);
             mdate = format.format(d);
@@ -106,7 +106,7 @@ public class DateUtil {
          * 详细设计： 1.被400整除是闰年，否则： 2.不能被4整除则不是闰年 3.能被4整除同时不能被100整除则是闰年
          * 3.能被4整除同时能被100整除则不是闰年
          */
-        Date d = strToDate(ddate, FORMAT_YYYYMMDD);
+        Date d = strToDate(ddate, YYYY_MM_DD);
         GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
         gc.setTime(d);
         int year = gc.get(Calendar.YEAR);
@@ -153,7 +153,7 @@ public class DateUtil {
      */
     public static String getWeek(String sdate) {
         // 再转换为时间
-        Date date = strToDate(sdate, FORMAT_YYYYMMDD);
+        Date date = strToDate(sdate, YYYY_MM_DD);
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         // int hour=c.get(Calendar.DAY_OF_WEEK);
@@ -171,7 +171,7 @@ public class DateUtil {
      */
     public static String getWeek(String sdate, String num) {
         // 再转换为时间
-        Date dd = strToDate(sdate, FORMAT_YYYYMMDD);
+        Date dd = strToDate(sdate, YYYY_MM_DD);
         Calendar c = Calendar.getInstance();
         c.setTime(dd);
         if (num.equals("1")) // 返回星期一所在的日期
@@ -235,6 +235,18 @@ public class DateUtil {
         }
         long day = (date.getTime() - mydate.getTime()) / (24 * 60 * 60 * 1000);
         return day;
+    }
+
+    /**
+     * 格式化日期
+     *
+     * @param date 日期
+     * @param pattern 格式(例如:yyyy-MM-dd)
+     * @return 格式化后的日期字符串
+     */
+    public static String formatDate(Date date, String pattern) {
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return format.format(date);
     }
 
 }

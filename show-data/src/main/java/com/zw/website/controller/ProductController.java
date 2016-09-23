@@ -2,8 +2,10 @@ package com.zw.website.controller;
 
 import com.zw.framework.controller.dto.BaseJsonResponse;
 import com.zw.framework.controller.dto.NameIntValuePair;
+import com.zw.framework.utils.DateUtil;
 import com.zw.website.controller.res.KindShowJsonResponse;
 import com.zw.website.controller.res.MarketShowJsonResponse;
+import com.zw.website.controller.res.PriceShowJsonResponse;
 import com.zw.website.model.CoKindModel;
 import com.zw.website.model.KindStatisticsModel;
 import com.zw.website.model.MarketStatisticsModel;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 农产品数据展示
@@ -130,13 +134,33 @@ public class ProductController {
 
     @RequestMapping("/price/show")
     @ResponseBody
-    public BaseJsonResponse priceShow(HttpServletRequest request) {
+    public PriceShowJsonResponse priceShow(HttpServletRequest request) {
         List<PriceStatisticsModel> ans = priceStatisticsService.getAll();
-        BaseJsonResponse response = new BaseJsonResponse();
+        PriceShowJsonResponse response = new PriceShowJsonResponse();
         response.setTitle("山西省的每种农产品的价格波动趋势");
         if (ans != null) {
+            String[] legendData = new String[10];
+            String[] xAxisData = new String[5];
+            List<PriceShowJsonResponse.EntityData> seriesData = new ArrayList<>();
+            boolean isNotXAxisSet = true;
+            for (int i = 0; i < 50; i=i+5) {
+                legendData[i / 5] = ans.get(i).getKind();
+                Float[] data = new Float[5];
+                for (int j = 0; j < 5; j++) {
+                    // 设置横坐标
+                    if (isNotXAxisSet) {
+                        xAxisData[j] = DateUtil.formatDate(ans.get(i+j).getCollectDate(),
+                                DateUtil.YYYY_MM_DD);
+                    }
+                    data[j] = ans.get(i + j).getPrice();
+                }
+                seriesData.add(new PriceShowJsonResponse.EntityData(ans.get(i).getKind(), data));
+                isNotXAxisSet = false;
+            }
             response.setResult(true);
-            response.setData(ans);
+            response.setLegendData(legendData);
+            response.setxAxisData(xAxisData);
+            response.setData(seriesData);
         } else {
             response.setResult(false);
         }

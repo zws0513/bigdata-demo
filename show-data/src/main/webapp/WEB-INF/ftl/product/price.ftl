@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>山西省的每种农产品的价格波动趋势</title>
+    <script src="../../../resources/js/common/common.js"></script>
 </head>
 <body>
 <div style="padding:10px;clear: both;">
@@ -12,31 +13,32 @@
 <script src="../../../resources/js/jquery/jquery-1.11.0.min.js"></script>
 <script src="../../../resources/js/common/common.js"></script>
 <script src="../../../resources/js/plugins/echarts.js"></script>
-<script src="../../../resources/js/map/china.js"></script>
 <script type="text/javascript">
     //查询
-    function loadMarketData() {
+    function loadPriceData() {
         //图表
-        var kindChart = echarts.init(document.getElementById('psLine'));
-        kindChart.clear();
+        var priceChart = echarts.init(document.getElementById('psLine'));
+        priceChart.clear();
 
         var resultJson = ajaxCommon(getRootPath() + "/product/price/show");
         if (resultJson.result) {
             var option = {
                 title: {
                     text: '',
-                    left: 'center'
+                    x: "center"
                 },
                 tooltip: {
-                    trigger: 'item'
+                    trigger: 'axis'
                 },
-                visualMap: {
-                    min: 0,
-                    max: 10,
-                    left: 'left',
-                    top: 'bottom',
-                    text: ['高', '低'],           // 文本，默认为数值文本
-                    calculable: true
+                legend: {
+                    data: [],
+                    y:"bottom"
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '5%',
+                    containLabel: true
                 },
                 toolbox: {
                     show: true,
@@ -49,32 +51,24 @@
                         saveAsImage: {}
                     }
                 },
-                series: [
-                    {
-                        name: '',
-                        type: 'map',
-                        mapType: 'china',
-                        roam: false,
-                        label: {
-                            normal: {
-                                show: true
-                            },
-                            emphasis: {
-                                show: true
-                            }
-                        },
-                        data:[]
-                    }
-                ]
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: []
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: []
             };
             option.title.text = resultJson.title;
-            option.visualMap.min = resultJson.min;
-            option.visualMap.max = resultJson.max;
-            option.series[0].data = resultJason.data;
-            marketChart.setOption(option);
+            option.legend.data = resultJson.legendData;
+            option.xAxis.data = resultJson.xAxisData;
+            option.series = resultJson.data;
+            priceChart.setOption(option);
         }
     }
     //载入图表
-    loadMarketData();
+    loadPriceData();
 </script>
 </html>

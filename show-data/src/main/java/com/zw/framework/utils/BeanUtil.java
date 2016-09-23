@@ -173,7 +173,7 @@ public class BeanUtil {
                 Method set_Method = cls.getMethod("set" + fieldName, fieldType);
                 String type = fieldType.getName();
                 if (type.equals("java.util.Date")) {
-                    set_Method.invoke(t, DateUtil.strToDate(v[1], DateUtil.FORMAT_YYYYMMDD_HHMISS));
+                    set_Method.invoke(t, DateUtil.strToDate(v[1], DateUtil.YYYY_MM_DD_HH_MM_SS));
                 } else if (type.equals("java.lang.Integer")) {
                     set_Method.invoke(t, Integer.valueOf(v[1]));
                 } else {
