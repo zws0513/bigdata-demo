@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry
+            location="/Users/zhangws/opt/apache-maven-3.3.3/repo/mysql/mysql-connector-java/5.1.32/mysql-connector-java-5.1.32.jar"/>
+    <context id="my" targetRuntime="MyBatis3">
+        <!-- 注释生成器 -->
+        <commentGenerator>
+            <property name="suppressDate" value="false"/>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://hss02:3306/w1?useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="hadoop"
+                        password="hadoop"/>
+
+        <!-- 类型转换器或者加类型解析器 -->
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer true，把JDBC DECIMAL 和
+            NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- java模型生成器 -->
+        <!-- targetProject:自动生成代码的位置 -->
+        <javaModelGenerator targetPackage="com.zw.website.model"
+                            targetProject="/Users/zhangws/Documents/doc/02.study/01.大数据开发实战/bigdata-demo/show-data/src/main/resources/">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="true"/>
+            <!-- 从数据库返回的值被清理前后的空格 -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!-- map xml 生成器 -->
+        <sqlMapGenerator targetPackage="com.zw.website.dao"
+                         targetProject="/Users/zhangws/Documents/doc/02.study/01.大数据开发实战/bigdata-demo/show-data/src/main/resources/">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <!-- mapper 或者就是dao接口生成器 -->
+        <javaClientGenerator targetPackage="com.zw.website.dao"
+                             targetProject="/Users/zhangws/Documents/doc/02.study/01.大数据开发实战/bigdata-demo/show-data/src/main/resources/"
+                             type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!-- pojo 实体生成器 -->
+        <!-- tableName:用于自动生成代码的数据库表；domainObjectName:对应于数据库表的javaBean类名 -->
+        <!-- schema即为数据库名 可不写 -->
+        <!--
+        <table tableName="market_statistics" domainObjectName="MarketStatisticsModel"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+
+        <table tableName="kind_statistics" domainObjectName="KindStatisticsModel"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+
+        <table tableName="price_statistics" domainObjectName="PriceStatisticsModel"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+
+        <table tableName="province" domainObjectName="ProvinceModel"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+        -->
+
+        <table tableName="co_kind" domainObjectName="CoKindModel"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+    </context>
+</generatorConfiguration>

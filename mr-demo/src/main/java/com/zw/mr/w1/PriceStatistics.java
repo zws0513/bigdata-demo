@@ -90,7 +90,7 @@ public class PriceStatistics {
                 avg = sum / count;
             }
             //输出key
-            context.write(key, new FloatWritable(avg));
+            context.write(key, new FloatWritable((float)(Math.round(avg*100))/100));
         }
 
         /**

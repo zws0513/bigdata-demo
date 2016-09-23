@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+    http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans-4.0.xsd  
+    http://www.springframework.org/schema/context   
+    http://www.springframework.org/schema/context/spring-context-4.0.xsd  
+    http://www.springframework.org/schema/mvc    
+    http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+    <!--  @Controller 声明Action组件
+     @Service    声明Service组件    @Service("myMovieLister")
+     @Repository 声明Dao组件
+     @Component   泛指组件, 当不好归类时.
+     @RequestMapping("/menu")  请求映射
+     @Resource  用于注入，( j2ee提供的 ) 默认按名称装配，@Resource(name="beanName")
+     @Autowired 用于注入，(spring提供的) 默认按类型装配
+     @Transactional( rollbackFor={Exception.class}) 事务管理
+     @ResponseBody
+     @Scope("prototype")   设定bean的作用域
+    -->
+    <context:component-scan base-package="com.zw.website">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+    </context:component-scan>
+
+    <!-- 配置静态资源 -->
+    <mvc:resources location="/resources/" mapping="/resources/**"/>
+
+    <context:property-placeholder location="classpath:conf/app_config.properties"/>
+
+    <!-- XML转码器 -->
+    <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape"/>
+
+    <!-- 配置freeMarker -->
+    <bean id="freemarkerConfig"
+          class="com.zw.framework.tag.ShiroTagFreeMarkerConfigurer">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="templateLoaderPath" value="/WEB-INF/ftl/"/>
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="xml_escape" value-ref="fmXmlEscape"/>
+            </map>
+        </property>
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">5</prop>
+            </props>
+        </property>
+    </bean>
+    <!-- 配置freeMarker视图解析器 -->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+        <property name="contentType" value="text/html; charset=utf-8"/>
+        <property name="cache" value="true"/>
+        <property name="suffix" value=".ftl"/>
+        <property name="order" value="1"/>
+        <property name="requestContextAttribute" value="request"/>
+        <property name="exposeRequestAttributes" value="true"/>
+        <property name="exposeSessionAttributes" value="true"/>
+        <property name="exposeSpringMacroHelpers" value="true"/>
+    </bean>
+
+    <!-- jsp视图解析器 -->
+    <bean id="jspViewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <property name="suffix" value=".jsp"/>
+        <property name="order" value="2"/>
+    </bean>
+
+    <!-- 将无法mapping到Controller的path交给default servlet handler处理 -->
+    <mvc:default-servlet-handler/>
+
+    <mvc:annotation-driven />
+    <!-- 采用注解方式配置MVC
+    <mvc:annotation-driven
+            content-negotiation-manager="contentNegotiationManager" validator="validator">
+        <mvc:argument-resolvers>
+            <bean class="org.springframework.data.web.PageableHandlerMethodArgumentResolver"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
+    <bean id="contentNegotiationManager"
+          class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorPathExtension" value="true"/>
+        <property name="favorParameter" value="true"/>
+        <property name="defaultContentType" value="text/html"/>
+        <property name="mediaTypes">
+            <value>
+                json=application/json
+            </value>
+        </property>
+    </bean>
+    -->
+
+    <!-- Json
+    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/plain;charset=utf-8</value>
+                        <value>text/html;charset=utf-8</value>
+                        <value>text/json;charset=utf-8</value>
+                        <value>application/json;charset=utf-8</value>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
+    -->
+
+    <!-- 配置文件上传，如果没有使用文件上传可以不用配置，当然如果不配，那么配置文件中也不必引入上传组件包 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="utf-8"/>
+        <!-- 文件大小最大值 -->
+        <property name="maxUploadSize" value="10485760000"/>
+        <!-- 内存中的最大值 -->
+        <property name="maxInMemorySize" value="40960"/>
+    </bean>
+
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+        <property name="providerClass" value="org.hibernate.validator.HibernateValidator"/>
+        <!-- 如果不加默认到 使用classpath下的 ValidationMessages.properties -->
+        <property name="validationMessageSource" ref="messageSource"/>
+    </bean>
+
+    <bean id="messageSource"
+          class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="conf/messages"/>
+        <property name="fileEncodings" value="utf-8"/>
+        <property name="cacheSeconds" value="120"/>
+    </bean>
+</beans>

@@ -12,7 +12,10 @@ public class Support {
 
     public static void main(String[] args) {
 //        mkdir();
-        get();
+        //get();
+        float   a  =   123.2334f;
+        float  b   =  (float)(Math.round(a*100))/100;
+        System.out.println(b);
     }
 
     private static void mkdir() {
