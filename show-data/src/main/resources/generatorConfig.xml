@@ -13,7 +13,7 @@
         </commentGenerator>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://hss02:3306/w1?useUnicode=true&amp;characterEncoding=UTF-8"
+                        connectionURL="jdbc:mysql://hss02:3306/hw?useUnicode=true&amp;characterEncoding=UTF-8"
                         userId="hadoop"
                         password="hadoop"/>
 
@@ -26,7 +26,7 @@
 
         <!-- java模型生成器 -->
         <!-- targetProject:自动生成代码的位置 -->
-        <javaModelGenerator targetPackage="com.zw.website.model"
+        <javaModelGenerator targetPackage="com.zw.website.model.car"
                             targetProject="/Users/zhangws/Documents/doc/02.study/01.大数据开发实战/bigdata-demo/show-data/src/main/resources/">
             <!-- enableSubPackages:是否让schema作为包的后缀 -->
             <property name="enableSubPackages" value="true"/>
@@ -35,13 +35,13 @@
         </javaModelGenerator>
 
         <!-- map xml 生成器 -->
-        <sqlMapGenerator targetPackage="com.zw.website.dao"
+        <sqlMapGenerator targetPackage="com.zw.website.dao.car"
                          targetProject="/Users/zhangws/Documents/doc/02.study/01.大数据开发实战/bigdata-demo/show-data/src/main/resources/">
             <property name="enableSubPackages" value="true"/>
         </sqlMapGenerator>
 
         <!-- mapper 或者就是dao接口生成器 -->
-        <javaClientGenerator targetPackage="com.zw.website.dao"
+        <javaClientGenerator targetPackage="com.zw.website.dao.car"
                              targetProject="/Users/zhangws/Documents/doc/02.study/01.大数据开发实战/bigdata-demo/show-data/src/main/resources/"
                              type="XMLMAPPER">
             <property name="enableSubPackages" value="true"/>
@@ -50,36 +50,72 @@
         <!-- pojo 实体生成器 -->
         <!-- tableName:用于自动生成代码的数据库表；domainObjectName:对应于数据库表的javaBean类名 -->
         <!-- schema即为数据库名 可不写 -->
-        <!--
-        <table tableName="market_statistics" domainObjectName="MarketStatisticsModel"
+<!--
+        <table tableName="market_statistics" domainObjectName="MarketStatistics"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="true"
                selectByExampleQueryId="false">
         </table>
 
-        <table tableName="kind_statistics" domainObjectName="KindStatisticsModel"
+        <table tableName="kind_statistics" domainObjectName="KindStatistics"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="true"
                selectByExampleQueryId="false">
         </table>
 
-        <table tableName="price_statistics" domainObjectName="PriceStatisticsModel"
+        <table tableName="price_statistics" domainObjectName="PriceStatistics"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="true"
                selectByExampleQueryId="false">
         </table>
 
-        <table tableName="province" domainObjectName="ProvinceModel"
+        <table tableName="province" domainObjectName="Province"
                enableCountByExample="false" enableUpdateByExample="false"
                enableDeleteByExample="false" enableSelectByExample="true"
                selectByExampleQueryId="false">
         </table>
-        -->
+        <table tableName="co_kind" domainObjectName="CoKind"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+-->
+<!-- -->
+        <table tableName="brand_engine_fuel" domainObjectName="BrandEngineFuel"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="cars_sale_scale_by_month" domainObjectName="CarsSaleScaleByMonth"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="cars_usage_amount_dist" domainObjectName="CarsUsageAmountDist"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="city_district_sale_dist" domainObjectName="CityDistrictSaleDist"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="diff_brand_month_sale_dist" domainObjectName="DiffBrandMonthSaleDist"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="gender_scale" domainObjectName="GenderScale"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="owner_type_brand" domainObjectName="OwnerTypeBrand"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="true"
+               selectByExampleQueryId="false">
+        </table>
 
-        <table tableName="co_kind" domainObjectName="CoKindModel"
-               enableCountByExample="false" enableUpdateByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="true"
-               selectByExampleQueryId="false">
-        </table>
     </context>
 </generatorConfiguration>

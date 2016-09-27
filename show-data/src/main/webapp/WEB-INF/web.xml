@@ -85,6 +85,21 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!-- 采用ehcache来缓存页面
+    <filter>
+        <filter-name>productCacheFilter</filter-name>
+        <filter-class>net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter</filter-class>
+        <init-param>
+            <param-name>cacheName</param-name>
+            <param-value>product</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>productCacheFilter</filter-name>
+        <url-pattern>/product/list/*</url-pattern>
+    </filter-mapping>
+    -->
+
     <!-- Spring监听器 -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>

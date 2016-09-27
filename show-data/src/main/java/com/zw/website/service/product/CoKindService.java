@@ -1,8 +1,8 @@
 package com.zw.website.service.product;
 
-import com.zw.website.dao.product.CoKindModelMapper;
-import com.zw.website.model.CoKindModel;
-import com.zw.website.model.CoKindModelExample;
+import com.zw.website.dao.product.CoKindMapper;
+import com.zw.website.model.product.CoKind;
+import com.zw.website.model.product.CoKindExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +15,9 @@ import java.util.List;
 public class CoKindService {
 
     @Autowired
-    private CoKindModelMapper dao;
+    private CoKindMapper dao;
 
-    public List<CoKindModel> getAll() {
-        return dao.selectByExample(new CoKindModelExample());
+    public List<CoKind> getAll() {
+        return dao.selectByExample(new CoKindExample());
     }
 }

@@ -47,7 +47,10 @@
         </property>
         <property name="freemarkerSettings">
             <props>
-                <prop key="template_update_delay">5</prop>
+                <!-- 设置 template_update_delay 为0 ，因此每次在刷新 free marker页面时，
+                均会进行修改时间 的校验，判断是否应该重新载入。
+                -->
+                <prop key="template_update_delay">0</prop>
             </props>
         </property>
     </bean>
@@ -57,9 +60,11 @@
         <property name="viewClass"
                   value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
         <property name="contentType" value="text/html; charset=utf-8"/>
-        <property name="cache" value="true"/>
+        <!-- 开发环境下为false, 线上环境是true, 避免所有缓存 -->
+        <property name="cache" value="false"/>
         <property name="suffix" value=".ftl"/>
         <property name="order" value="1"/>
+        <!-- 此变量值为pageContext.request, 页面使用方法：rc.contextPath -->
         <property name="requestContextAttribute" value="request"/>
         <property name="exposeRequestAttributes" value="true"/>
         <property name="exposeSessionAttributes" value="true"/>

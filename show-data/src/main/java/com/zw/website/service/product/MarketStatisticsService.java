@@ -1,11 +1,11 @@
 package com.zw.website.service.product;
 
-import com.zw.website.dao.product.MarketStatisticsModelMapper;
-import com.zw.website.dao.product.ProvinceModelMapper;
-import com.zw.website.model.MarketStatisticsModel;
-import com.zw.website.model.MarketStatisticsModelExample;
-import com.zw.website.model.ProvinceModel;
-import com.zw.website.model.ProvinceModelExample;
+import com.zw.website.dao.product.MarketStatisticsMapper;
+import com.zw.website.dao.product.ProvinceMapper;
+import com.zw.website.model.product.MarketStatistics;
+import com.zw.website.model.product.MarketStatisticsExample;
+import com.zw.website.model.product.Province;
+import com.zw.website.model.product.ProvinceExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +19,15 @@ import java.util.stream.Collectors;
 public class MarketStatisticsService {
 
     @Autowired
-    private MarketStatisticsModelMapper marketDao;
+    private MarketStatisticsMapper marketDao;
 
     @Autowired
-    private ProvinceModelMapper provinceDao;
+    private ProvinceMapper provinceDao;
 
-    public List<MarketStatisticsModel> getAll() {
-        List<MarketStatisticsModel> marketList = marketDao.selectByExample(new MarketStatisticsModelExample());
-        List<ProvinceModel> provinceList = provinceDao.selectByExample(new ProvinceModelExample());
-        for (MarketStatisticsModel market : marketList) {
+    public List<MarketStatistics> getAll() {
+        List<MarketStatistics> marketList = marketDao.selectByExample(new MarketStatisticsExample());
+        List<Province> provinceList = provinceDao.selectByExample(new ProvinceExample());
+        for (MarketStatistics market : marketList) {
             for (int i = 0; i < provinceList.size(); i++) {
                 if (market.getProvince().startsWith(provinceList.get(i).getName())) {
                     provinceList.remove(i);
@@ -35,7 +35,7 @@ public class MarketStatisticsService {
             }
         }
         marketList.addAll(provinceList.stream().map(
-                province -> new MarketStatisticsModel(province.getName(), 0))
+                province -> new MarketStatistics(province.getName(), 0))
                 .collect(Collectors.toList()));
         return marketList;
     }

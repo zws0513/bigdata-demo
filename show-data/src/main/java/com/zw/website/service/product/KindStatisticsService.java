@@ -1,8 +1,11 @@
 package com.zw.website.service.product;
 
-import com.zw.website.dao.product.KindStatisticsModelMapper;
-import com.zw.website.dao.product.ProvinceModelMapper;
-import com.zw.website.model.*;
+import com.zw.website.dao.product.KindStatisticsMapper;
+import com.zw.website.dao.product.ProvinceMapper;
+import com.zw.website.model.product.KindStatistics;
+import com.zw.website.model.product.KindStatisticsExample;
+import com.zw.website.model.product.Province;
+import com.zw.website.model.product.ProvinceExample;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,15 +19,15 @@ import java.util.stream.Collectors;
 public class KindStatisticsService {
 
     @Autowired
-    private KindStatisticsModelMapper kindDao;
+    private KindStatisticsMapper kindDao;
 
     @Autowired
-    private ProvinceModelMapper provinceDao;
+    private ProvinceMapper provinceDao;
 
-    public List<KindStatisticsModel> getAll() {
-        List<KindStatisticsModel> kindList = kindDao.selectByExample(new KindStatisticsModelExample());
-        List<ProvinceModel> provinceList = provinceDao.selectByExample(new ProvinceModelExample());
-        for (KindStatisticsModel kind : kindList) {
+    public List<KindStatistics> getAll() {
+        List<KindStatistics> kindList = kindDao.selectByExample(new KindStatisticsExample());
+        List<Province> provinceList = provinceDao.selectByExample(new ProvinceExample());
+        for (KindStatistics kind : kindList) {
             for (int i = 0; i < provinceList.size(); i++) {
                 if (kind.getProvince().startsWith(provinceList.get(i).getName())) {
                     provinceList.remove(i);
@@ -32,7 +35,7 @@ public class KindStatisticsService {
             }
         }
         kindList.addAll(provinceList.stream().map(
-                province -> new KindStatisticsModel(province.getName(), 0))
+                province -> new KindStatistics(province.getName(), 0))
                 .collect(Collectors.toList()));
         return kindList;
     }
