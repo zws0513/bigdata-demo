@@ -71,8 +71,8 @@ public class PriceStatistics {
                 throws IOException, InterruptedException {
 
             float sum = 0.0f;
-            float max = 0.0f;
-            float min = 0.0f;
+            float max = Float.MIN_VALUE;
+            float min = Float.MAX_VALUE;
             int count = 0;
 //            if (key.toString().contains("人参果")) {
 //                System.out.println("test");
