@@ -22,7 +22,9 @@ public class HelloWorldBolt extends BaseBasicBolt {
         String test = tuple.getStringByField("sentence");
         if ("Hello World".equals(test)) {
             myCount++;
-            System.out.println("Found a Hello World! My Count is now: " + myCount);
+            System.out.println("==========================: " + myCount);
+        } else {
+            //System.out.println("++++++++++++++++++++++++++: " + myCount);
         }
     }
 

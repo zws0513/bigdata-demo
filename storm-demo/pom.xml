@@ -38,6 +38,10 @@
             <groupId>org.apache.storm</groupId>
             <artifactId>storm-core</artifactId>
             <version>${storm.version}</version>
+            <!--
+            java直接运行时，修改为 compile,
+            maven运行时，使用 provided
+            -->
             <scope>compile</scope>
         </dependency>
         <dependency>
