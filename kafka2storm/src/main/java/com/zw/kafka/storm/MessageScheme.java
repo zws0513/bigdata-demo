@@ -9,6 +9,10 @@ import java.util.List;
 
 /**
  * 对kafka出来的数据转换成字符串
+ * <p>
+ *     KafkaSpout是Storm中自带的Spout,
+ *     使用KafkaSpout时需要子集实现Scheme接口，它主要负责从消息流中解析出需要的数据
+ * </p>
  *
  * Created by zhangws on 16/10/2.
  */

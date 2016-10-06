@@ -32,13 +32,12 @@ public class SenqueceBolt extends BaseBasicBolt {
      */
     public void execute(Tuple input, BasicOutputCollector collector) {
         String word = (String) input.getValue(0);
-        String out = "output:" + word;
-        System.out.println(out);
+        System.out.println("==============" + word);
 
         //写文件
         try {
-            DataOutputStream out_file = new DataOutputStream(new FileOutputStream("kafkastorm.out"));
-            out_file.writeUTF(out);
+            DataOutputStream out_file = new DataOutputStream(new FileOutputStream("/home/zkpk/kafkastorm.out"));
+            out_file.writeUTF(word);
             out_file.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -46,7 +45,7 @@ public class SenqueceBolt extends BaseBasicBolt {
             e.printStackTrace();
         }
 
-        collector.emit(new Values(out));
+        collector.emit(new Values(word));
     }
 
     /**

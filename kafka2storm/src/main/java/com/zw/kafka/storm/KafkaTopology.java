@@ -8,10 +8,7 @@ import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
-import storm.kafka.BrokerHosts;
-import storm.kafka.KafkaSpout;
-import storm.kafka.SpoutConfig;
-import storm.kafka.ZkHosts;
+import storm.kafka.*;
 import storm.kafka.bolt.KafkaBolt;
 
 import java.util.HashMap;
@@ -28,41 +25,49 @@ import java.util.Map;
  */
 public class KafkaTopology {
 
-    public static void main(String[] args) {
-        BrokerHosts brokerHosts = new ZkHosts("192.168.99.145:2181/kafka");
+    private static final String BROKER_ZK_LIST = "hsm01:2181,hss01:2181,hss02:2181";
+    private static final String ZK_PATH = "/kafka/brokers";
 
-        SpoutConfig spoutConfig = new SpoutConfig(brokerHosts, "topic1", "/kafka", "kafkaspout");
+    public static void main(String[] args) throws Exception {
+        // 配置Zookeeper地址
+        BrokerHosts brokerHosts = new ZkHosts(BROKER_ZK_LIST, ZK_PATH);
+        // 配置Kafka订阅的Topic，以及zookeeper中数据节点目录和名字
+        SpoutConfig spoutConfig = new SpoutConfig(brokerHosts, "sogolog", "/kafka", "kafka");
 
-        Config conf = new Config();
-        Map<String, String> map = new HashMap<String, String>();
+//        // 配置KafkaBolt中的kafka.broker.properties
+//        Config conf = new Config();
+//        Map<String, String> map = new HashMap<String, String>();
+//
+//        // 配置Kafka broker地址
+//        map.put("metadata.broker.list", "hsm01:9092");
+//        // serializer.class为消息的序列化类
+//        map.put("serializer.class", "kafka.serializer.StringEncoder");
+//        conf.put("kafka.broker.properties", map);
+//        // 配置KafkaBolt生成的topic
+//        conf.put("topic", "topic2");
 
-        map.put("metadata.broker.list", "192.168.99.145:9092");
-        map.put("serializer.class", "kafka.serializer.StringEncoder");
-        conf.put("kafka.broker.properties", map);
-        conf.put("topic", "topic2");
-
-        spoutConfig.scheme = new SchemeAsMultiScheme(new MessageScheme());
+        //spoutConfig.scheme = new SchemeAsMultiScheme(new MessageScheme());
+        spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
 
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("spout", new KafkaSpout(spoutConfig));
-        builder.setBolt("bolt", new SenqueceBolt()).shuffleGrouping("spout");
-        builder.setBolt("kafkabolt", new KafkaBolt<String, Integer>()).shuffleGrouping("bolt");
+        builder.setSpout("kafka-spout", new KafkaSpout(spoutConfig), 1);
+        builder.setBolt("kafka-bolt", new SenqueceBolt()).shuffleGrouping("kafka-spout");
+        builder.setBolt("kafka-bolt2", new KafkaBolt<String, Integer>()).shuffleGrouping("kafka-bolt");
 
+        Config conf = new Config();
+        String name = KafkaTopology.class.getSimpleName();
         if(args != null && args.length > 0) {
-            //提交到集群运行
-            try {
-                StormSubmitter.submitTopology(args[0], conf, builder.createTopology());
-            } catch (AlreadyAliveException e) {
-                e.printStackTrace();
-            } catch (InvalidTopologyException e) {
-                e.printStackTrace();
-            }
+            // Nimbus host name passed from command line
+            conf.put(Config.NIMBUS_HOST, args[0]);
+            conf.setNumWorkers(2);
+            StormSubmitter.submitTopology(name, conf, builder.createTopology());
         } else {
             //本地模式运行
+            conf.setMaxTaskParallelism(3);
             LocalCluster cluster = new LocalCluster();
-            cluster.submitTopology("Topotest1121", conf, builder.createTopology());
-            Utils.sleep(1000000);
-            cluster.killTopology("Topotest1121");
+            cluster.submitTopology(name, conf, builder.createTopology());
+            Utils.sleep(60000);
+            cluster.killTopology(name);
             cluster.shutdown();
         }
     }
