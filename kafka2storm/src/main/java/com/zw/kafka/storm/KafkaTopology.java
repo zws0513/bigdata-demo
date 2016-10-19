@@ -3,12 +3,13 @@ package com.zw.kafka.storm;
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.StormSubmitter;
-import backtype.storm.generated.AlreadyAliveException;
-import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.spout.SchemeAsMultiScheme;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.utils.Utils;
-import storm.kafka.*;
+import storm.kafka.BrokerHosts;
+import storm.kafka.KafkaSpout;
+import storm.kafka.SpoutConfig;
+import storm.kafka.ZkHosts;
 import storm.kafka.bolt.KafkaBolt;
 
 import java.util.HashMap;
@@ -17,9 +18,9 @@ import java.util.Map;
 /**
  * 配置kafka提交topology到storm的代码
  * <p>
- *     topic1的含义kafka接收生产者过来的数据所需要的topic;
- *     topic2是KafkaBolt也就是storm中的bolt生成的topic，当然这里topic2这行配置可以省略，
- *     是没有任何问题的，类似于一个中转的东西
+ * topic1的含义kafka接收生产者过来的数据所需要的topic;
+ * topic2是KafkaBolt也就是storm中的bolt生成的topic，当然这里topic2这行配置可以省略，
+ * 是没有任何问题的，类似于一个中转的东西
  * </p>
  * Created by zhangws on 16/10/2.
  */
@@ -51,11 +52,11 @@ public class KafkaTopology {
 
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new KafkaSpout(spoutConfig), 1);
-        builder.setBolt("kafka-bolt", new SenqueceBolt()).shuffleGrouping("kafka-spout");
+        builder.setBolt("kafka-bolt", new SequenceBolt()).shuffleGrouping("kafka-spout");
         builder.setBolt("kafka-bolt2", new KafkaBolt<String, Integer>()).shuffleGrouping("kafka-bolt");
 
         String name = KafkaTopology.class.getSimpleName();
-        if(args != null && args.length > 0) {
+        if (args != null && args.length > 0) {
             // Nimbus host name passed from command line
             conf.put(Config.NIMBUS_HOST, args[0]);
             conf.setNumWorkers(2);

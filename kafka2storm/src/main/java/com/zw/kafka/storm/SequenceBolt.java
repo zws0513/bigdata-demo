@@ -20,7 +20,7 @@ import java.io.IOException;
  *
  * Created by zhangws on 16/10/2.
  */
-public class SenqueceBolt extends BaseBasicBolt {
+public class SequenceBolt extends BaseBasicBolt {
 
     /**
      * Process the input tuple and optionally emit new tuples based on the input tuple.
@@ -36,7 +36,7 @@ public class SenqueceBolt extends BaseBasicBolt {
 
         //写文件
         try {
-            DataOutputStream out_file = new DataOutputStream(new FileOutputStream("kafkastorm.out"));
+            DataOutputStream out_file = new DataOutputStream(new FileOutputStream("/home/zkpk/kafkastorm.out"));
             out_file.writeUTF(word);
             out_file.close();
         } catch (FileNotFoundException e) {
