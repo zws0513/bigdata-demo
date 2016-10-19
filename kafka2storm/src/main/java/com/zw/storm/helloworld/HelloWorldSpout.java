@@ -41,7 +41,6 @@ public class HelloWorldSpout extends BaseRichSpout {
      * </p>
      * @param outputFieldsDeclarer
      */
-    @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
         outputFieldsDeclarer.declare(new Fields("sentence"));
     }
@@ -53,7 +52,6 @@ public class HelloWorldSpout extends BaseRichSpout {
      * @param topologyContext
      * @param spoutOutputCollector
      */
-    @Override
     public void open(Map map, TopologyContext topologyContext,
                      SpoutOutputCollector spoutOutputCollector) {
         this.collector = spoutOutputCollector;
@@ -62,7 +60,6 @@ public class HelloWorldSpout extends BaseRichSpout {
     /**
      * 每调用一次就可以向storm集群中发射一条数据（一个tuple元组），该方法会被不停的调用
      */
-    @Override
     public void nextTuple() {
         Utils.sleep(100);
         final Random rand = new Random();

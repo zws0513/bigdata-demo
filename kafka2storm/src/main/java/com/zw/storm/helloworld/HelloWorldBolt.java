@@ -17,7 +17,6 @@ public class HelloWorldBolt extends BaseBasicBolt {
 
     private int myCount;
 
-    @Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {
         String test = tuple.getStringByField("sentence");
         if ("Hello World".equals(test)) {
@@ -28,7 +27,6 @@ public class HelloWorldBolt extends BaseBasicBolt {
         }
     }
 
-    @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
 
     }
