@@ -36,7 +36,7 @@ public class SenqueceBolt extends BaseBasicBolt {
 
         //写文件
         try {
-            DataOutputStream out_file = new DataOutputStream(new FileOutputStream("/home/zkpk/kafkastorm.out"));
+            DataOutputStream out_file = new DataOutputStream(new FileOutputStream("kafkastorm.out"));
             out_file.writeUTF(word);
             out_file.close();
         } catch (FileNotFoundException e) {

@@ -34,27 +34,26 @@ public class KafkaTopology {
         // 配置Kafka订阅的Topic，以及zookeeper中数据节点目录和名字
         SpoutConfig spoutConfig = new SpoutConfig(brokerHosts, "sogolog", "/kafka", "kafka");
 
-//        // 配置KafkaBolt中的kafka.broker.properties
-//        Config conf = new Config();
-//        Map<String, String> map = new HashMap<String, String>();
-//
-//        // 配置Kafka broker地址
-//        map.put("metadata.broker.list", "hsm01:9092");
-//        // serializer.class为消息的序列化类
-//        map.put("serializer.class", "kafka.serializer.StringEncoder");
-//        conf.put("kafka.broker.properties", map);
-//        // 配置KafkaBolt生成的topic
-//        conf.put("topic", "topic2");
+        // 配置KafkaBolt中的kafka.broker.properties
+        Config conf = new Config();
+        Map<String, String> map = new HashMap<String, String>();
 
-        //spoutConfig.scheme = new SchemeAsMultiScheme(new MessageScheme());
-        spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
+        // 配置Kafka broker地址
+        map.put("metadata.broker.list", "hsm01:9092");
+        // serializer.class为消息的序列化类
+        map.put("serializer.class", "kafka.serializer.StringEncoder");
+        conf.put("kafka.broker.properties", map);
+        // 配置KafkaBolt生成的topic
+        conf.put("topic", "topic2");
+
+        spoutConfig.scheme = new SchemeAsMultiScheme(new MessageScheme());
+//        spoutConfig.scheme = new SchemeAsMultiScheme(new StringScheme());
 
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("kafka-spout", new KafkaSpout(spoutConfig), 1);
         builder.setBolt("kafka-bolt", new SenqueceBolt()).shuffleGrouping("kafka-spout");
         builder.setBolt("kafka-bolt2", new KafkaBolt<String, Integer>()).shuffleGrouping("kafka-bolt");
 
-        Config conf = new Config();
         String name = KafkaTopology.class.getSimpleName();
         if(args != null && args.length > 0) {
             // Nimbus host name passed from command line
