@@ -12,10 +12,10 @@
     <module>hbase-demo</module>
     <module>hive-demo</module>
     <module>show-data</module>
-    <module>storm-demo</module>
     <module>spark-demo</module>
     <module>kafka2storm</module>
     <module>flumeng-kafka-plugin</module>
+    <module>scala-demo</module>
   </modules>
 
 </project>
