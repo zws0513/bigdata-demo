@@ -1,5 +1,8 @@
 package com.zw.spark.demo
 
+import java.io.Serializable
+import java.util.Comparator
+
 import com.google.gson.Gson
 import org.apache.spark.{Partitioner, SparkConf, SparkContext}
 
@@ -47,7 +50,10 @@ object ScalaOperatorDemo {
         //        pipe(sc)
         //        coalesce(sc)
         //        cartesian(sc)
-        repartitionAndSortWithinPartitions(sc)
+//        repartitionAndSortWithinPartitions(sc)
+
+        // Action算子
+        reduce(sc)
     }
 
     class User(var id: Int, var name: String, var pwd: String, var sex: Int)
@@ -338,4 +344,8 @@ object ScalaOperatorDemo {
         }).foreach(println)
     }
 
+    def reduce(sc: SparkContext): Unit = {
+        println(sc.parallelize(Array(("A", 1), ("B", 6), ("A", 2), ("C", 1), ("A", 7), ("A", 8)))
+                .countByKey())
+    }
 }
