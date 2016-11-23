@@ -1,19 +1,25 @@
 package com.zw.demo.tenth
 
-import java.io.InputStream
+import java.io.{FileInputStream, InputStream}
 
 /**
   * Created by zhangws on 16/10/28.
   */
-class IterableInputStream extends InputStream with Iterable[Byte]{
-  def read(): Int = 0
+trait IterableInputStream extends InputStream with Iterable[Byte] {
 
-  def iterator: Iterator[Byte] = {
-    null
-  }
+    class InputStreamIterator(outer: IterableInputStream) extends Iterator[Byte] {
+        def hasNext: Boolean = outer.available() > 0
+
+        def next: Byte = outer.read().toByte
+    }
+
+    override def iterator: Iterator[Byte] = new InputStreamIterator(this)
 }
 
 object Ten extends App {
-
-  println("xxx")
+    val fis = new FileInputStream("myapp.log") with IterableInputStream
+    val it = fis.iterator
+    while (it.hasNext)
+        println(it.next())
+    fis.close()
 }

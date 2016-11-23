@@ -16,3 +16,9 @@ trait RectangleLike {
     this.height = h
   }
 }
+
+object RectangleLike {
+    def main(args: Array[String]) {
+
+    }
+}
